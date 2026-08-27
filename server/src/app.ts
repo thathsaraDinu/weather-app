@@ -3,6 +3,7 @@ import cors from "cors";
 import cityRouter from "./routes/city.routes.js";
 import weatherRouter from "./routes/weather.routes.js";
 import cacheRouter from "./routes/cache.routes.js";
+import analyticsRouter from "./routes/analytics.routes.js";
 
 const app = express();
 
@@ -18,5 +19,8 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/cities", cityRouter);
 app.use("/api/weather", weatherRouter);
 app.use("/api/cache", cacheRouter);
+app.use("/api/analytics", analyticsRouter);
+
+app.use(errorMiddleware);
 
 export default app;
