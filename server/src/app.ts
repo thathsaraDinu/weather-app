@@ -4,6 +4,7 @@ import cityRouter from "./routes/city.routes.js";
 import weatherRouter from "./routes/weather.routes.js";
 import cacheRouter from "./routes/cache.routes.js";
 import analyticsRouter from "./routes/analytics.routes.js";
+import { errorMiddleware } from "./middleware/error.middleware.js";
 
 const app = express();
 
