@@ -90,43 +90,44 @@ pnpm dev
 The Comfort Index score is calculated using the following formula:
 
 ```
-Comfort Score = (Temperature Score × 0.35) + (Humidity Score × 0.25) + (Wind Score × 0.20) + (Cloudiness Score × 0.20)
+Comfort Score = (Temperature Score × 0.45) + (Humidity Score × 0.25) + (Wind Score × 0.15) + (Cloudiness Score × 0.15)
 ```
 
 ### Parameter Scoring
 
-#### Temperature Score (35% weight)
-- **Optimal range**: 18-24°C (100 points)
-- **Formula**: `100 - |temperature - 21| × 4`
-- **Rationale**: 21°C is widely considered the most comfortable indoor temperature. The score decreases linearly as temperature deviates from this ideal.
+#### Temperature Score (45% weight)
+- **Optimal temperature**: 22°C
+- **Tolerance range**: ±15°C
+- **Formula**: `100 - (|temperature - 22| / 15) × 100`, clamped to 0-100
+- **Rationale**: 22°C is widely considered the most comfortable indoor temperature. The score decreases linearly as temperature deviates from this ideal, with a tolerance range of 15°C before reaching zero.
 
 #### Humidity Score (25% weight)
-- **Optimal range**: 40-60% (100 points)
-- **Formula**: 
-  - If humidity < 40%: `humidity × 2.5`
-  - If humidity > 60%: `150 - humidity × 2.5`
-  - Otherwise: 100
-- **Rationale**: Both very low and very high humidity cause discomfort. The 40-60% range is ideal for human comfort and health.
+- **Optimal humidity**: 50%
+- **Tolerance range**: ±50%
+- **Formula**: `100 - (|humidity - 50| / 50) × 100`, clamped to 0-100
+- **Rationale**: Both very low and very high humidity cause discomfort. The 50% ideal is based on human comfort studies, with tolerance extending to extreme conditions.
 
-#### Wind Score (20% weight)
-- **Optimal range**: 0-3 m/s (100 points)
-- **Formula**: `100 - (windSpeed × 15)`
-- **Rationale**: Light winds (0-3 m/s) are comfortable. Higher wind speeds cause discomfort, especially when combined with temperature extremes.
+#### Wind Score (15% weight)
+- **Comfortable wind**: ≤2 m/s
+- **Maximum penalty speed**: 10 m/s
+- **Formula**: If wind ≤ 2 m/s: 100; otherwise: `100 - ((wind - 2) / (10 - 2)) × 100`, clamped to 0-100
+- **Rationale**: Light winds (≤2 m/s) are comfortable. Higher wind speeds cause discomfort, especially when combined with temperature extremes. The penalty scales linearly up to 10 m/s.
 
-#### Cloudiness Score (20% weight)
-- **Optimal range**: 0-30% (100 points)
-- **Formula**: `100 - (cloudiness × 1.2)`
-- **Rationale**: Clear to partly cloudy skies are generally preferred. Heavy cloud cover can affect mood and UV exposure, though it does provide temperature moderation.
+#### Cloudiness Score (15% weight)
+- **Comfortable cloudiness**: ≤20%
+- **Maximum cloudiness**: 100%
+- **Formula**: If cloudiness ≤ 20%: 100; otherwise: `100 - ((cloudiness - 20) / (100 - 20)) × 100`, clamped to 0-100
+- **Rationale**: Clear to partly cloudy skies (≤20%) are generally preferred. Higher cloud cover affects mood and UV exposure, though it does provide temperature moderation.
 
 ### Reasoning Behind Variable Weights
 
-1. **Temperature (35%)**: Temperature has the most immediate and significant impact on human comfort. Our bodies are highly sensitive to thermal changes, making this the most critical factor.
+1. **Temperature (45%)**: Temperature has the most immediate and significant impact on human comfort. Our bodies are highly sensitive to thermal changes, making this the most critical factor. The higher weight reflects this primacy.
 
-2. **Humidity (25%)**: Humidity significantly affects perceived temperature through the heat index. High humidity makes heat feel more oppressive, while low humidity causes dryness and irritation.
+2. **Humidity (25%)**: Humidity significantly affects perceived temperature through the heat index. High humidity makes heat feel more oppressive, while low humidity causes dryness and irritation. This secondary effect gets substantial weight.
 
-3. **Wind (20%)**: Wind chill and wind heat effects are important but secondary to temperature and humidity. Moderate winds can actually enhance comfort by promoting evaporation.
+3. **Wind (15%)**: Wind chill and wind heat effects are important but secondary to temperature and humidity. Moderate winds can actually enhance comfort by promoting evaporation, but strong winds are uncomfortable. The lower weight reflects this conditional impact.
 
-4. **Cloudiness (20%)**: While less critical than the other factors, cloud cover affects both thermal comfort (through UV exposure and temperature moderation) and psychological well-being.
+4. **Cloudiness (15%)**: While less critical than the other factors, cloud cover affects both thermal comfort (through UV exposure and temperature moderation) and psychological well-being. This gets the lowest weight as it's more of a comfort modifier than a primary driver.
 
 ### Trade-offs Considered
 
