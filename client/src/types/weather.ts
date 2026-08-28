@@ -10,4 +10,10 @@ export interface WeatherAnalytics {
   pressure: number;
   visibility: number;
   comfortScore: number;
+  temperatureTrend: TemperatureDataPoint[];
+}
+
+export interface TemperatureDataPoint {
+  time: string;
+  temperature: number;
 }
