@@ -8,7 +8,17 @@ export const errorMiddleware: ErrorRequestHandler = (
 ) => {
   console.error(err);
 
-  res.status(500).json({
-    error: "Internal server error",
+  const statusCode =
+    typeof err.statusCode === "number"
+      ? err.statusCode
+      : typeof err.status === "number"
+        ? err.status
+        : 500;
+
+  res.status(statusCode).json({
+    error:
+      statusCode === 401
+        ? "Unauthorized"
+        : "Internal server error",
   });
 };
