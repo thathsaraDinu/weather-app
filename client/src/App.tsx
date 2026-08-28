@@ -147,7 +147,7 @@ function App() {
                 Comfort Index
               </h1>
               <p className="mt-4 max-w-xl text-lg text-slate-600 dark:text-slate-300">
-                Our proprietary algorithm analyzes temperature, humidity, wind speed, and cloudiness to determine the world's most comfortable cities.
+                Our algorithm analyzes temperature, humidity, wind speed, and cloudiness to determine the world's most comfortable cities.
               </p>
             </div>
           </div>
