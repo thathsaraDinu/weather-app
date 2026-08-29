@@ -1,9 +1,9 @@
 import type { OpenWeatherResponse } from "../types/weather.js";
 
 const IDEAL_TEMPERATURE = 22;
-const IDEAL_HUMIDITY = 50;
-
 const TEMPERATURE_TOLERANCE = 15;
+
+const IDEAL_HUMIDITY = 50;
 const HUMIDITY_TOLERANCE = 50;
 
 const COMFORTABLE_WIND_SPEED = 2;
